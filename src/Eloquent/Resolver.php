@@ -1,38 +1,57 @@
 <?php
+
 namespace Maksimer\ORM\Eloquent;
 
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\ConnectionResolverInterface;
 
-class Resolver implements ConnectionResolverInterface {
-
+/**
+ * Class Resolver
+ * @package Maksimer\ORM\Eloquent
+ *
+ * @since 1.0.0
+ */
+class Resolver implements ConnectionResolverInterface
+{
     /**
      * Get a database connection instance.
      *
-     * @param  string $name
+     * @param string $name
      *
-     * @return \Illuminate\Database\Connection
+     * @return ConnectionInterface
+     *
+     * @since 1.0.0
      */
-    public function connection( $name = null ) {
+    public function connection($name = null)
+    {
         return Database::instance();
     }
+
 
     /**
      * Get the default connection name.
      *
      * @return string
+     *
+     * @since 1.0.0
      */
-    public function getDefaultConnection() {
-        // TODO: Implement getDefaultConnection() method.
+    public function getDefaultConnection()
+    {
+        return Database::instance()->getName();
     }
+
 
     /**
      * Set the default connection name.
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return void
+     *
+     * @since 1.0.0
      */
-    public function setDefaultConnection( $name ) {
+    public function setDefaultConnection($name)
+    {
         // TODO: Implement setDefaultConnection() method.
     }
 }
