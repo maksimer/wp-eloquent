@@ -6,22 +6,27 @@ namespace Maksimer\ORM\Eloquent;
 use Illuminate\Database\Query\Builder as EloquentBuilder;
 
 /**
- * QueryBuilder Class
+ * Builder Class
  *
- * @package WeDevs\ERP\Framework
+ * @package Maksimer\ORM\Eloquent
+ *
+ * @since 1.0.0
  */
-class Builder extends EloquentBuilder {
-
+class Builder extends EloquentBuilder
+{
     /**
      * Add an exists clause to the query.
      *
-     * @param  \Illuminate\Database\Query\Builder $query
-     * @param  string  $boolean
-     * @param  bool  $not
+     * @param  EloquentBuilder $query
+     * @param  string          $boolean
+     * @param  bool            $not
+     *
      * @return $this
+     *
+     * @since 1.0.0
      */
-    public function addWhereExistsQuery(EloquentBuilder $query, $boolean = 'and', $not = false) {
-        
+    public function addWhereExistsQuery(EloquentBuilder $query, $boolean = 'and', $not = false)
+    {
         $type = $not ? 'NotExists' : 'Exists';
 
         $this->wheres[] = compact('type', 'query', 'boolean');
@@ -30,5 +35,4 @@ class Builder extends EloquentBuilder {
 
         return $this;
     }
-
 }
