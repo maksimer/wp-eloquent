@@ -1,12 +1,12 @@
 <?php
-namespace WeDevs\ORM\Eloquent;
+namespace Maksimer\ORM\Eloquent;
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
  * Model Class
  *
- * @package WeDevs\ERP\Framework
+ * @package Maksimer\ORM\Framework
  */
 abstract class Model extends Eloquent {
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace WeDevs\ORM\WP;
+namespace Maksimer\ORM\WP;
 
 
-use WeDevs\ORM\Eloquent\Model;
+use Maksimer\ORM\Eloquent\Model;
 
 class UserMeta extends Model
 {

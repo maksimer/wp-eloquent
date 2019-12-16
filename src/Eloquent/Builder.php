@@ -1,5 +1,7 @@
 <?php
-namespace WeDevs\ORM\Eloquent;
+
+namespace Maksimer\ORM\Eloquent;
+
 
 use Illuminate\Database\Query\Builder as EloquentBuilder;
 

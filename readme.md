@@ -2,18 +2,13 @@
 
 This is a library package to use Laravel's [Eloquent ORM](http://laravel.com/docs/5.0/eloquent) with WordPress.
 
+This package is based on the work from https://github.com/tareq1988/wp-eloquent.
 
 ## Package Installation
 
 To install this package, edit your `composer.json` file:
 
-```js
-{
-    "require": {
-        "tareq1988/wp-eloquent": "dev-master"
-    }
-}
-```
+`composer require maksimer/wp-eloquent`
 
 Now run:
 
@@ -25,14 +20,14 @@ Now run:
 
 ```php
 
-$db = \WeDevs\ORM\Eloquent\Database::instance();
+$db = \Maksimer\ORM\Eloquent\Database::instance();
 
 var_dump( $db->table('users')->find(1) );
 var_dump( $db->select('SELECT * FROM wp_users WHERE id = ?', [1]) );
 var_dump( $db->table('users')->where('user_login', 'john')->first() );
 
 // OR with DB facade
-use \WeDevs\ORM\Eloquent\Facades\DB;
+use \Maksimer\ORM\Eloquent\Facades\DB;
 
 var_dump( DB::table('users')->find(1) );
 var_dump( DB::select('SELECT * FROM wp_users WHERE id = ?', [1]) );
@@ -46,7 +41,7 @@ You can use custom tables of the WordPress databases to create models:
 	namespace whatever;
 
 
-	class CustomTableModel extends \WeDevs\ORM\Eloquent\Model {
+	class CustomTableModel extends \Maksimer\ORM\Eloquent\Model {
 
 		/**
 		 * Name for table without prefix
@@ -127,7 +122,7 @@ Here `users` is the table name **without prefix**. The prefix will be applied au
 ## Writing a Model
 
 ```php
-use \WeDevs\ORM\Eloquent\Model as Model;
+use \Maksimer\ORM\Eloquent\Model as Model;
 
 class Employee extends Model {
 
@@ -148,14 +143,14 @@ The class name `Employee` will be translated into `PREFIX_employees` table to ru
 
 
 ```php
-use WeDevs\ORM\WP\Post as Post;
+use Maksimer\ORM\WP\Post as Post;
 
 var_dump( Post::all() ); //returns only posts with WordPress post_type "post"
 ```
 
 #### Filter `Post` by `post_status` and `post_type`
 ```php
-use WeDevs\ORM\WP\Post as Post;
+use Maksimer\ORM\WP\Post as Post;
 var_dump(Post::type('page')->get()->toArray()); // get pages
 var_dump(Post::status('publish')->get()->toArray()); // get posts with publish status
 var_dump(Post::type('page')->status('publish')->get()->toArray()); // get pages with publish status

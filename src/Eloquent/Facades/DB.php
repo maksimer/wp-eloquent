@@ -1,9 +1,10 @@
 <?php
 
-namespace WeDevs\ORM\Eloquent\Facades;
+namespace Maksimer\ORM\Eloquent\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use WeDevs\ORM\Eloquent\Database;
+use Maksimer\ORM\Eloquent\Database;
+
 
 /**
  * @see \Illuminate\Database\DatabaseManager

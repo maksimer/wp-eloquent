@@ -1,5 +1,6 @@
 <?php
-namespace WeDevs\ORM\Eloquent;
+
+namespace Maksimer\ORM\Eloquent;
 
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Query\Grammars\Grammar;
@@ -8,6 +9,13 @@ use Illuminate\Database\Query\Expression;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
 
+
+/**
+ * Class Database
+ * @package Maksimer\ORM\Eloquent
+ *
+ * @since 1.0.0
+ */
 class Database implements ConnectionInterface
 {
 
