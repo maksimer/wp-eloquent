@@ -2,6 +2,9 @@
 
 namespace Maksimer\ORM\Eloquent;
 
+use Closure;
+use DateTime;
+use Exception;
 use Generator;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Query\Builder as Builder;
@@ -10,6 +13,7 @@ use Illuminate\Database\Query\Processors\Processor;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
+use wpdb;
 
 
 /**
@@ -67,7 +71,7 @@ class Database implements ConnectionInterface
      */
     public function __construct()
     {
-        /** @var \wpdb $wpdb */
+        /** @var wpdb $wpdb */
         global $wpdb;
 
         $this->config = [
@@ -162,8 +166,9 @@ class Database implements ConnectionInterface
 
         $result = $this->db->get_row($query);
 
-        if ($result === false || $this->db->last_error)
-            throw new QueryException($query, $bindings, new \Exception($this->db->last_error));
+        if ($result === false || $this->db->last_error) {
+            throw new QueryException($query, $bindings, new Exception($this->db->last_error));
+        }
 
         return $result;
     }
@@ -189,7 +194,7 @@ class Database implements ConnectionInterface
         $result = $this->db->get_results($query);
 
         if ($result === false || $this->db->last_error)
-            throw new QueryException($query, $bindings, new \Exception($this->db->last_error));
+            throw new QueryException($query, $bindings, new Exception($this->db->last_error));
 
         return $result;
     }
@@ -217,8 +222,9 @@ class Database implements ConnectionInterface
     /**
      * A hacky way to emulate bind parameters into SQL query
      *
-     * @param $query
-     * @param $bindings
+     * @param string $query
+     * @param array  $bindings
+     * @param bool   $update
      *
      * @return mixed
      *
@@ -243,7 +249,7 @@ class Database implements ConnectionInterface
             return $replace;
         }, $bindings);
 
-        $query = str_replace(array('%', '?'), array('%%', '%s'), $query);
+        $query = str_replace(['%', '?'], ['%%', '%s'], $query);
         $query = vsprintf($query, $bindings);
 
         return $query;
@@ -262,14 +268,14 @@ class Database implements ConnectionInterface
      *
      * @since 1.0.0
      */
-    public function bind_and_run($query, $bindings = array())
+    public function bind_and_run($query, $bindings = [])
     {
         $new_query = $this->bind_params($query, $bindings);
 
         $result = $this->db->query($new_query);
 
         if ($result === false || $this->db->last_error)
-            throw new QueryException($new_query, $bindings, new \Exception($this->db->last_error));
+            throw new QueryException($new_query, $bindings, new Exception($this->db->last_error));
 
         return (array) $result;
     }
@@ -285,7 +291,7 @@ class Database implements ConnectionInterface
      *
      * @since 1.0.0
      */
-    public function insert($query, $bindings = array())
+    public function insert($query, $bindings = [])
     {
         return $this->statement($query, $bindings);
     }
@@ -301,7 +307,7 @@ class Database implements ConnectionInterface
      *
      * @since 1.0.0
      */
-    public function update($query, $bindings = array())
+    public function update($query, $bindings = [])
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -317,7 +323,7 @@ class Database implements ConnectionInterface
      *
      * @since 1.0.0
      */
-    public function delete($query, $bindings = array())
+    public function delete($query, $bindings = [])
     {
         return $this->affectingStatement($query, $bindings);
     }
@@ -333,7 +339,7 @@ class Database implements ConnectionInterface
      *
      * @since 1.0.0
      */
-    public function statement($query, $bindings = array())
+    public function statement($query, $bindings = [])
     {
         $new_query = $this->bind_params($query, $bindings, true);
 
@@ -351,14 +357,14 @@ class Database implements ConnectionInterface
      *
      * @since 1.0.0
      */
-    public function affectingStatement($query, $bindings = array())
+    public function affectingStatement($query, $bindings = [])
     {
         $new_query = $this->bind_params($query, $bindings, true);
 
         $result = $this->db->query($new_query);
 
         if ($result === false || $this->db->last_error)
-            throw new QueryException($new_query, $bindings, new \Exception($this->db->last_error));
+            throw new QueryException($new_query, $bindings, new Exception($this->db->last_error));
 
         return intval($result);
     }
@@ -401,7 +407,7 @@ class Database implements ConnectionInterface
                 $bindings[$key] = intval($value);
             } elseif (is_scalar($value)) {
                 continue;
-            } elseif ($value instanceof \DateTime) {
+            } elseif ($value instanceof DateTime) {
                 // We need to transform all instances of the DateTime class into an actual
                 // date string. Each query grammar maintains its own date string format
                 // so we'll just ask the grammar for the format to get from the date.
@@ -416,23 +422,23 @@ class Database implements ConnectionInterface
     /**
      * Execute a Closure within a transaction.
      *
-     * @param  \Closure $callback
+     * @param  Closure $callback
      * @param  int  $attempts
      *
      * @return mixed
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @since 1.0.0
      */
-    public function transaction(\Closure $callback, $attempts = 1)
+    public function transaction(Closure $callback, $attempts = 1)
     {
         $this->beginTransaction();
         try {
             $data = $callback();
             $this->commit();
             return $data;
-        } catch (\Exception $e){
+        } catch (Exception $e){
             $this->rollBack();
             throw $e;
         }
@@ -510,13 +516,13 @@ class Database implements ConnectionInterface
      * Execute the given callback in "dry run" mode.
      * // TODO: Implement pretend() method.
      *
-     * @param \Closure $callback
+     * @param Closure $callback
      *
      * @return array
      *
      * @since 1.0.0
      */
-    public function pretend(\Closure $callback)
+    public function pretend(Closure $callback)
     {
 
     }
